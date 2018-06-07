@@ -1,0 +1,11 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/contexts/components.jsonld",
+    {
+      "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
+      "caqoqni": "npmd:@comunica/actor-query-operation-quadpattern-n3-inferencing/",
+
+      "ActorQueryOperationQuadpatternN3Inferencing": "caqoqni:Actor/QueryOperation/QuadpatternN3Inferencing"
+    }
+  ]
+}

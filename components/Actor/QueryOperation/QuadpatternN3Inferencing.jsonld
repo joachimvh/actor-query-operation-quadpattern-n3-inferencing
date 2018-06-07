@@ -1,0 +1,45 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/contexts/comunica-actor-query-operation-quadpattern-n3-inferencing.jsonld",
+    "https://linkedsoftwaredependencies.org/contexts/comunica-bus-query-operation.jsonld"
+  ],
+  "@id": "npmd:@comunica/actor-query-operation-quadpattern-n3-inferencing",
+  "components": [
+    {
+      "@id": "caqoqni:Actor/QueryOperation/QuadpatternN3Inferencing",
+      "@type": "Class",
+      "extends": "cbqo:Actor/QueryOperationTypedMediated",
+      "requireElement": "ActorQueryOperationQuadpatternN3Inferencing",
+      "comment": "A comunica Quadpattern N3 Inferencing Query Operation Actor.",
+      "parameters": [
+        {
+          "@id": "caqoqni:mediatorPattern",
+          "comment": "The pattern mediator",
+          "required": true,
+          "unique": true
+        },
+        {
+          "@id": "caqoqni:rules",
+          "comment": "The N3 rules that can be used",
+          "required": true,
+          "unique": true
+        }
+      ],
+      "constructorArguments": [
+        {
+          "extends": "cbqo:Actor/QueryOperationTypedMediated/constructorArgumentsObject",
+          "fields": [
+            {
+              "keyRaw": "mediatorPattern",
+              "value": "caqoqni:mediatorPattern"
+            },
+            {
+              "keyRaw": "rules",
+              "value": "caqoqni:rules"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

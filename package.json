@@ -1,0 +1,83 @@
+{
+  "name": "actor-query-operation-quadpattern-n3-inferencing",
+  "version": "1.1.0",
+  "description": "A quadpattern-n3-inferencing query-operation actor",
+  "lsd:module": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-query-operation-quadpattern-n3-inferencing",
+  "lsd:components": "components/components.jsonld",
+  "lsd:contexts": {
+    "https://linkedsoftwaredependencies.org/contexts/comunica-actor-query-operation-quadpattern-n3-inferencing.jsonld": "components/context.jsonld"
+  },
+  "main": "index.js",
+  "typings": "index",
+  "repository": "https://github.com/comunica/comunica/tree/master/packages/actor-query-operation-quadpattern-n3-inferencing",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "comunica",
+    "actor",
+    "query-operation",
+    "quadpattern-n3-inferencing"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://github.com/comunica/comunica#readme",
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "index.d.ts",
+    "index.js"
+  ],
+  "peerDependencies": {
+    "@comunica/core": "^1.1.0",
+    "@comunica/bus-query-operation": "^1.1.0"
+  },
+  "dependencies": {
+    "asynciterator-promiseproxy": "^1.2.0",
+    "asynciterator-union": "^1.2.0",
+    "jsreasoner": "git+ssh://git@git.datasciencelab.ugent.be:4444/jvherweg/JSReasoner.git",
+    "rdf-string": "^1.1.1",
+    "rdf-terms": "^1.1.0"
+  },
+  "devDependencies": {
+    "@comunica/bus-query-operation": "^1.1.0",
+    "@comunica/core": "^1.1.0",
+    "@types/asynciterator": "^1.1.1",
+    "@types/jest": "^22.2.3",
+    "@types/node": "^9.6.20",
+    "@types/rdf-data-model": "^1.0.1",
+    "@types/rdf-js": "^1.0.1",
+    "arrayify-stream": "^1.0.0",
+    "jest": "^22.4.4",
+    "rdf-data-model": "^1.0.0",
+    "rdf-js": "^1.0.1",
+    "sparqlalgebrajs": "^0.7.5",
+    "ts-jest": "^22.4.6",
+    "typescript": "^2.9.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+    ],
+    "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "collectCoverage": true
+  },
+  "scripts": {
+    "test": "jest ${1}",
+    "test-watch": "jest ${1} --watch",
+    "lint": "tslint lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
+    "build": "tsc",
+    "validate": "npm ls",
+    "postinstall": "tsc"
+  }
+}
