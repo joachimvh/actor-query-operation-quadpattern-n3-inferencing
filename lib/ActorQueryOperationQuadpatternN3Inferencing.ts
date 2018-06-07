@@ -75,8 +75,9 @@ export class ActorQueryOperationQuadpatternN3Inferencing extends ActorQueryOpera
     : Promise<IActorQueryOperationOutputBindings> {
 
     const patternStrings: {[id:string]: string} = {};
-    for (let pos of QUAD_TERM_NAMES)
+    for (let pos of QUAD_TERM_NAMES) {
       patternStrings[pos] = RdfString.termToString(pattern[pos]);
+    }
     const n3Pattern = this.fromRdfjs(pattern);
 
     const results: BindingsStream[] = [];
@@ -87,12 +88,18 @@ export class ActorQueryOperationQuadpatternN3Inferencing extends ActorQueryOpera
 
     // TODO: also find indirect rules (e.g., rules generating rules that can find a result)
     for (let {map, rule, match} of BackwardReasoner.matchingRules(n3Pattern, this.n3Rules)) {
-      let conclusion = this.toRdfjs(match);
-      let conclusionStrings: { [id: string]: string } = {};
-      for (let pos of QUAD_TERM_NAMES)
+      const conclusion = this.toRdfjs(match.applyMapping(map));
+      const conclusionStrings: { [id: string]: string } = {};
+      for (let pos of QUAD_TERM_NAMES) {
         conclusionStrings[pos] = RdfString.termToString(conclusion[pos]);
+      }
       // TODO: assuming everything in premise is a default pattern (i.e., no builtins, formulas, lists, etc.)
-      let premise = BackwardReasoner.createGoals(rule, map).map((x: any) => this.toRdfjs(x));
+      const premise: Algebra.Pattern[] = BackwardReasoner.createGoals(rule, map).map((x: any) => this.toRdfjs(x));
+
+      // this would provide invalid results by not being supported in normal RDF
+      if (premise.some(term => term.subject.termType === 'Literal' || term.predicate.termType === 'Literal')) {
+        continue;
+      }
 
       const proxyStream = new PromiseProxyIterator(async () => {
         const premiseOutput = ActorQueryOperation.getSafeBindings(await this.mediatorQueryOperation.mediate({
@@ -112,15 +119,6 @@ export class ActorQueryOperationQuadpatternN3Inferencing extends ActorQueryOpera
                 } else {
                   bindingsResult[patternStrings[pos]] = conclusion[pos];
                 }
-              } else {
-                /* it might happen that these are not equal if a triple has a literal as subject for example
-                 * (which is not supported by TPF) */
-                if (conclusion[pos].termType === 'Variable') {
-                  const binding = bindings.get(conclusionStrings[pos]);
-                  if (!binding || !pattern[pos].equals(binding)) {
-                    return done(null);
-                  }
-                }
               }
             }
             premiseResults._push(Bindings(bindingsResult));
@@ -137,13 +135,11 @@ export class ActorQueryOperationQuadpatternN3Inferencing extends ActorQueryOpera
     /* the metadata of the inferred streams could also be used to calculate totalItems,
      * but the problem there is that those might be infinite so never actually return a result for metadata */
 
-    const bindingsStream = results.length === 1 ? results[0] : new RoundRobinUnionIterator<Bindings>(results);
-
     return {
-      type: 'bindings',
-      bindingsStream,
-      metadata: patternOutput.metadata,
-      variables: getVariables(getTerms(pattern)).map(RdfString.termToString)
+      type:           'bindings',
+      bindingsStream: results.length === 1 ? results[0] : new RoundRobinUnionIterator<Bindings>(results),
+      metadata:       patternOutput.metadata,
+      variables:      getVariables(getTerms(pattern)).map(RdfString.termToString)
     };
   }
 }
